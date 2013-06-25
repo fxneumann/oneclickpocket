@@ -1,4 +1,4 @@
-	function shareArticleToPocket(id) {
+	function shareArticleToPocket(id, btn) {
 	try {
 		var query = "?op=pluginhandler&plugin=oneclickpocket&method=getInfo&id=" + param_escape(id);
 
@@ -12,6 +12,9 @@
 				var ti = JSON.parse(transport.responseText);
 				if (ti.status=="1") {
 				notify_info("Saved to Pocket:<br/><em>" + ti.title + "</em>");
+				
+				btn.src='plugins/oneclickpocket/pocket.png';
+				btn.title='Saved to Pocket';
 				} else {
 				notify_error("<strong>Error saving to Pocket!</strong><br/>("+ti.status+")");}
 			} });

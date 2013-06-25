@@ -11,7 +11,7 @@ class oneclickpocket extends Plugin {
 	}
 
 	function about() {
-		return array(0.1,
+		return array(0.2,
 				"Add articles to Pocket with a single click",
 				"fxneumann");
 	}
@@ -37,9 +37,9 @@ class oneclickpocket extends Plugin {
 	function hook_article_button($line) {
 		$article_id = $line["id"];
 
-		$rv = "<img src=\"plugins/oneclickpocket/pocket.png\"
+		$rv = "<img src=\"plugins/oneclickpocket/pocketgrey.png\"
 			class='tagsPic' style=\"cursor : pointer\"
-			onclick=\"shareArticleToPocket($article_id)\"
+			onclick=\"shareArticleToPocket($article_id, this)\"
 			title='".__('Save to Pocket')."'>";
 
 		return $rv;

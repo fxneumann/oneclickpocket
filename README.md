@@ -16,7 +16,7 @@ Version history
 ---------------
 * 0.1 Initial Version
 * 0.2 Icon changes colour when clicked
-* 0.3 Added a hotkey (thanks to Bas1c)
+* 0.3 Added a hotkey (thanks to Bas1c), since 0.31 change icon colour for hotkey, too.
 
 Credits
 -------

@@ -1,6 +1,7 @@
 	hotkey_actions['pock_it'] = function() {
 		if (getActiveArticleId()) {
-			shareArticleToPocket(getActiveArticleId(), this);
+		    var artid = "ocp"+getActiveArticleId();
+			shareArticleToPocket(getActiveArticleId(), document.getElementById(artid));
 			return;
 		}
 	};

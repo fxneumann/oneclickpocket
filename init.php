@@ -8,6 +8,9 @@ class oneclickpocket extends Plugin {
 		$host->add_hook($host::HOOK_ARTICLE_BUTTON, $this);
 		$host->add_hook($host::HOOK_PREFS_TAB, $this);
 		
+		$host->add_hook($host::HOOK_HOTKEY_MAP, $this);
+		$host->add_hook($host::HOOK_HOTKEY_INFO, $this);
+		
 	}
 
 	function about() {
@@ -136,6 +139,25 @@ print "<table width=\"100%\" class=\"prefPrefsList\">";
 	print "</div>"; #pane
 
 	}
+	
+	function hook_hotkey_map($hotkeys) {
+        // Use the new target "pock_it" to define your own 
+        // hotkey to this function in other plugins.
+        $hotkeys['i'] = 'pock_it';
+
+        return $hotkeys;
+    }
+	
+	function hook_hotkey_info($hotkeys) {
+        
+        $offset = 1 + array_search('open_in_new_window', array_keys($hotkeys[__('Article')]));
+        $hotkeys[__('Article')] =
+            array_slice($hotkeys[__('Article')], 0, $offset, true) +
+            array('pock_it' => __('Save to Pocket')) +
+            array_slice($hotkeys[__('Article')], $offset, NULL, true);
+
+        return $hotkeys;
+    }
 
 }
 

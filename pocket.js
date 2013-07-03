@@ -1,3 +1,10 @@
+	hotkey_actions['pock_it'] = function() {
+		if (getActiveArticleId()) {
+			shareArticleToPocket(getActiveArticleId(), this);
+			return;
+		}
+	};
+	
 	function shareArticleToPocket(id, btn) {
 	try {
 		var query = "?op=pluginhandler&plugin=oneclickpocket&method=getInfo&id=" + param_escape(id);

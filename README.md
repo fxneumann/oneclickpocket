@@ -1,7 +1,12 @@
 oneclickpocket
 ==============
 
-Plugin for Tiny Tiny RSS. Add articles to Pocket with a single click or press of a button. Tested with TT-RSS 1.7.9.
+Plugin for Tiny Tiny RSS. Add articles to Pocket with a single click or press of a button. Tested with TT-RSS 1.7.9 and TT-RSS 1.8.
+
+
+Requirements
+------------
+Requirements that exceed TT RSS' requirements: PHP CURL extension has to be enabled
 
 Installation
 ------------

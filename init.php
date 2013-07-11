@@ -14,7 +14,7 @@ class oneclickpocket extends Plugin {
 	}
 
 	function about() {
-		return array(0.31,
+		return array(0.32,
 				"Add articles to Pocket with a single click",
 				"fxneumann");
 	}
@@ -66,26 +66,30 @@ class oneclickpocket extends Plugin {
 		
 		
 		//Call Pocket API
-		$postfields = array(
-			'consumer_key' => $consumer_key,
-			'access_token' => $pocket_access_token,
+		
+		if (function_exists('curl_init')) {
+ 		 $postfields = array(
+		 	'consumer_key' => $consumer_key,
+		 	'access_token' => $pocket_access_token,
 			'url'          => $article_link,
 			'title'        => $title
 			);
-		$cURL = curl_init();
-		curl_setopt($cURL, CURLOPT_URL, 'https://getpocket.com/v3/add');
-		curl_setopt($cURL, CURLOPT_HEADER, 1);
-		curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded;charset=UTF-8'));
-		curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($cURL, CURLOPT_TIMEOUT, 5);
-		curl_setopt($cURL, CURLOPT_POST, 4);
-		curl_setopt($cURL, CURLOPT_POSTFIELDS, http_build_query($postfields));
-		$apicall = curl_exec($cURL);
-		curl_close($cURL);
-		
-		//Store error code in $status
-		$status = preg_match('/^X-Error: .*$/m', $apicall, $matches) ? $matches[0] : 1;
-		
+		 $cURL = curl_init();
+		 curl_setopt($cURL, CURLOPT_URL, 'https://getpocket.com/v3/add');
+		 curl_setopt($cURL, CURLOPT_HEADER, 1);
+		 curl_setopt($cURL, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded;charset=UTF-8'));
+		 curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
+		 curl_setopt($cURL, CURLOPT_TIMEOUT, 5);
+		 curl_setopt($cURL, CURLOPT_POST, 4);
+		 curl_setopt($cURL, CURLOPT_POSTFIELDS, http_build_query($postfields));
+		 $apicall = curl_exec($cURL);
+		 curl_close($cURL);
+		 
+		 //Store error code in $status
+		 $status = preg_match('/^X-Error: .*$/m', $apicall, $matches) ? $matches[0] : 1;
+		} else {
+		 $status = 'For the plugin to work you need to <strong>enable PHP extension CURL</strong>!';
+		}
 		//Return information on article and status
 		print json_encode(array(
 			"title" => $title,
@@ -125,6 +129,11 @@ print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"op
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"method\" value=\"save\">";
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"plugin\" value=\"oneclickpocket\">";
 print "<table width=\"100%\" class=\"prefPrefsList\">";
+
+if (!function_exists('curl_init')) {
+ print '<tr><td colspan="3" style="color:red;font-size:large">For the plugin to work you need to <strong>enable PHP extension CURL</strong>!</td></tr>';
+}
+
     print "<tr><td width=\"20%\">".__("Pocket Consumer Key")."</td>";
 	print '<td width=\"20%\">Get a <a href="http://getpocket.com/developer/apps/new">Pocket Consumer Key</a></td>';
 	print "<td class=\"prefValue\"><input dojoType=\"dijit.form.ValidationTextBox\" required=\"1\" name=\"pocket_consumer_key\" value=\"$pocket_consumer_key\"></td>";

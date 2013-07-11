@@ -22,6 +22,7 @@ Version history
 * 0.1 Initial Version
 * 0.2 Icon changes colour when clicked
 * 0.3 Added a hotkey (thanks to Bas1c), since 0.31 change icon colour for hotkey, too.
+* 0.32 Check for CURL and throw error if missing.
 
 Credits
 -------

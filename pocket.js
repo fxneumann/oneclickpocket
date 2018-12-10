@@ -30,7 +30,7 @@ require(['dojo/_base/kernel', 'dojo/ready'], function (dojo, ready) {
 		PluginHost.register(PluginHost.HOOK_INIT_COMPLETE, () => {
 			App.hotkey_actions["pock_it"]  = function() {
 				if (Article.getActive()) {
-					postArticleToWallabag(Article.getActive());
+				shareArticleToPocket(Article.getActive());
 					return;
 				}
 			};

@@ -15,16 +15,16 @@ class oneclickpocket extends Plugin {
 	}
 
 	function about() {
-		return array(0.32,
+		return array(0.33,
 				"Add articles to Pocket with a single click",
 				"fxneumann");
 	}
 	function save() {
 
-		$pocket_consumer_key = db_escape_string($this->link, $_POST["pocket_consumer_key"]);
+		$pocket_consumer_key = clean($_POST["pocket_consumer_key"]);
 		$this->host->set($this, "pocket_consumer_key", $pocket_consumer_key);
 		
-		$pocket_access_token = db_escape_string($this->link, $_POST["pocket_access_token"]);
+		$pocket_access_token = clean($_POST["pocket_access_token"]);
 		$this->host->set($this, "pocket_access_token", $pocket_access_token);
 				
 		echo "Consumer Key set to<br/> <small>$pocket_consumer_key</small><br/>Access Token set to<br/> <small>$pocket_access_token</small>";
@@ -52,14 +52,19 @@ class oneclickpocket extends Plugin {
 	function getInfo() {
 	    	
 		//retrieve Data from the DB
-		$id = db_escape_string($this->link, $_REQUEST['id']);
-		$result = db_query($this->link, "SELECT title, link
+		$id = $_REQUEST['id'];
+
+		$sth = $this->pdo->prepare("SELECT title, link
 				FROM ttrss_entries, ttrss_user_entries
-				WHERE id = '$id' AND ref_id = id AND owner_uid = " .$_SESSION['uid']);
-		if (db_num_rows($result) != 0) {
-			$title = truncate_string(strip_tags(db_fetch_result($result, 0, 'title')),
-					100, '...');
-			$article_link = db_fetch_result($result, 0, 'link');
+				WHERE id = ? AND ref_id = id AND owner_uid = ?");
+		$sth->execute([$id, $_SESSION['uid']]);
+
+		if($sth->rowCount() != 0) {
+
+			$row = $sth->fetch();
+
+			$title = truncate_string(strip_tags($row['title']), 100, '...');
+			$article_link = $row['link'];
 		}
 		
 		$consumer_key = $this->host->get($this, "pocket_consumer_key");

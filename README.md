@@ -24,8 +24,8 @@ Version history
 * 0.3 Added a hotkey (thanks to Bas1c), since 0.31 change icon colour for hotkey, too.
 * 0.32 Check for CURL and throw error if missing.
 * 0.33 Updated for PDO
+* 0.34 Update .js for TT-RSS 18.12+
 
 Credits
 -------
 I used Acaranta's (https://github.com/acaranta) Yourls-plugin as template.
-

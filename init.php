@@ -8,14 +8,14 @@ class oneclickpocket extends Plugin {
 
 		$host->add_hook($host::HOOK_ARTICLE_BUTTON, $this);
 		$host->add_hook($host::HOOK_PREFS_TAB, $this);
-		
+
 		$host->add_hook($host::HOOK_HOTKEY_MAP, $this);
 		$host->add_hook($host::HOOK_HOTKEY_INFO, $this);
-		
+
 	}
 
 	function about() {
-		return array(0.33,
+		return array(0.35,
 				"Add articles to Pocket with a single click",
 				"fxneumann");
 	}
@@ -23,10 +23,10 @@ class oneclickpocket extends Plugin {
 
 		$pocket_consumer_key = clean($_POST["pocket_consumer_key"]);
 		$this->host->set($this, "pocket_consumer_key", $pocket_consumer_key);
-		
+
 		$pocket_access_token = clean($_POST["pocket_access_token"]);
 		$this->host->set($this, "pocket_access_token", $pocket_access_token);
-				
+
 		echo "Consumer Key set to<br/> <small>$pocket_consumer_key</small><br/>Access Token set to<br/> <small>$pocket_access_token</small>";
 	}
 
@@ -43,14 +43,14 @@ class oneclickpocket extends Plugin {
 
 		$rv = "<img src=\"plugins/oneclickpocket/pocketgrey.png\"
 			class=\"tagsPic\" id=\"ocp$article_id\" style=\"cursor : pointer\"
-			onclick=\"shareArticleToPocket($article_id, this)\"
+			onclick=\"Plugins.oneclickpocket.shareArticleToPocket($article_id, this)\"
 			title='".__('Save to Pocket')."'>";
 
 		return $rv;
 	}
 
 	function getInfo() {
-	    	
+
 		//retrieve Data from the DB
 		$id = $_REQUEST['id'];
 
@@ -66,13 +66,13 @@ class oneclickpocket extends Plugin {
 			$title = truncate_string(strip_tags($row['title']), 100, '...');
 			$article_link = $row['link'];
 		}
-		
+
 		$consumer_key = $this->host->get($this, "pocket_consumer_key");
 		$pocket_access_token = $this->host->get($this, "pocket_access_token");
-		
-		
+
+
 		//Call Pocket API
-		
+
 		if (function_exists('curl_init')) {
  		 $postfields = array(
 		 	'consumer_key' => $consumer_key,
@@ -90,7 +90,7 @@ class oneclickpocket extends Plugin {
 		 curl_setopt($cURL, CURLOPT_POSTFIELDS, http_build_query($postfields));
 		 $apicall = curl_exec($cURL);
 		 curl_close($cURL);
-		 
+
 		 //Store error code in $status
 		 $status = preg_match('/^X-Error: .*$/m', $apicall, $matches) ? $matches[0] : 1;
 		} else {
@@ -102,7 +102,7 @@ class oneclickpocket extends Plugin {
 			"link" => $article_link,
 			"id" => $id,
 			"status" => $status
-			));		
+			));
 	}
 
 	function hook_prefs_tab($args) {
@@ -115,21 +115,18 @@ class oneclickpocket extends Plugin {
 
         $pocket_consumer_key = $this->host->get($this, "pocket_consumer_key");
 		$pocket_access_token = $this->host->get($this, "pocket_access_token");
-		
+
 		print "<form dojoType=\"dijit.form.Form\">";
 
 		print "<script type=\"dojo/method\" event=\"onSubmit\" args=\"evt\">
 			evt.preventDefault();
-		if (this.validate()) {
-			console.log(dojo.objectToQuery(this.getValues()));
-			new Ajax.Request('backend.php', {
-parameters: dojo.objectToQuery(this.getValues()),
-onComplete: function(transport) {
-notify_info(transport.responseText);
-}
-});
-}
-</script>";
+			if (this.validate()) {
+				console.log(dojo.objectToQuery(this.getValues()));
+				xhrPost('backend.php',
+					this.getValues(),
+					(transport) => { Notify.info(transport.responseText); });
+			}
+		</script>";
 
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"op\" value=\"pluginhandler\">";
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"method\" value=\"save\">";
@@ -154,17 +151,17 @@ if (!function_exists('curl_init')) {
 	print "</div>"; #pane
 
 	}
-	
+
 	function hook_hotkey_map($hotkeys) {
-        // Use the new target "pock_it" to define your own 
+        // Use the new target "pock_it" to define your own
         // hotkey to this function in other plugins.
         $hotkeys['i'] = 'pock_it';
 
         return $hotkeys;
     }
-	
+
 	function hook_hotkey_info($hotkeys) {
-        
+
         $offset = 1 + array_search('open_in_new_window', array_keys($hotkeys[__('Article')]));
         $hotkeys[__('Article')] =
             array_slice($hotkeys[__('Article')], 0, $offset, true) +

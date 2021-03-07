@@ -15,7 +15,7 @@ class oneclickpocket extends Plugin {
 	}
 
 	function about() {
-		return array(0.34,
+		return array(0.35,
 				"Add articles to Pocket with a single click",
 				"fxneumann");
 	}

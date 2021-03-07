@@ -25,6 +25,7 @@ Version history
 * 0.32 Check for CURL and throw error if missing.
 * 0.33 Updated for PDO
 * 0.34 Update .js for TT-RSS 18.12+
+* 0.35 Update .js for TT-RSS 21.03+
 
 Credits
 -------

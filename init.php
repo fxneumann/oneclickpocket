@@ -120,16 +120,13 @@ class oneclickpocket extends Plugin {
 
 		print "<script type=\"dojo/method\" event=\"onSubmit\" args=\"evt\">
 			evt.preventDefault();
-		if (this.validate()) {
-			console.log(dojo.objectToQuery(this.getValues()));
-			new Ajax.Request('backend.php', {
-parameters: dojo.objectToQuery(this.getValues()),
-onComplete: function(transport) {
-notify_info(transport.responseText);
-}
-});
-}
-</script>";
+			if (this.validate()) {
+				console.log(dojo.objectToQuery(this.getValues()));
+				xhrPost('backend.php',
+					this.getValues(),
+					(transport) => { Notify.info(transport.responseText); });
+			}
+		</script>";
 
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"op\" value=\"pluginhandler\">";
 print "<input dojoType=\"dijit.form.TextBox\" style=\"display : none\" name=\"method\" value=\"save\">";
